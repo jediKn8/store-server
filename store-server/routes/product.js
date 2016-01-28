@@ -26,8 +26,10 @@ var ProductSchema = common.Schema({
 
 ProductSchema.plugin(common.autoIncrement.plugin, 'product_id');
 var Product = common.conn.model('Product', ProductSchema);
+//==========================================router calls===========================================================
 
-router.route('/:id?')
+//------------------------------------------product details and decription-----------------------------------------
+router.route('/details/:id?')
 .get(function(req, res, next) {
 	//console.log("req.session.user"+JSON.stringify(req.session.passport.user));
 	
@@ -47,7 +49,20 @@ router.route('/:id?')
 		
 	}
 })
-//=========================================post operations===========================================================
+//------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------print products by category---------------------------------------------
+router.route('/categorylist/:category?')
+.get(function(req,res,next){
+    printProductByCategory(req.param("category"),function(category){
+    console.log("catetgory: "+category);
+    res.send(category);
+    });
+})
+
+//------------------------------------------------------------------------------------------------------------------
+
+
+//=========================================post operations==========================================================
 router.route('/addproduct/?')
 .post(function(req, res, next) {
 	
@@ -72,7 +87,11 @@ function getProductDetails(fn) {
 			return fn(item);
 	})
 }
-
+function printProductByCategory(category,fn){
+    Product.find({category:category}).exec(function(err,obj){
+        return fn(obj);
+    })
+}
 // get event by id
 function getProductDetailsById(pID, fn) {
     Product.findOne({barcode_id: pID})
@@ -80,5 +99,5 @@ function getProductDetailsById(pID, fn) {
 			return fn(obj);
 	})
 }
-
+//------------------------------------------------------------------------------------------------------------------
 module.exports = router;
