@@ -13,9 +13,14 @@ var ProductSchema = common.Schema({
     product_name: String,
     quantity:Number,
     aisle_no: Number,
+    category:String,
     shelf:String,
-    barcode_id:String
-
+    barcode_id:String,
+    description:String,
+    size: String,
+    color:String,
+    availability:{ type: String, enum: ['yes', 'no'] },
+    price:Number
 });
 
 
