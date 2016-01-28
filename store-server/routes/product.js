@@ -90,6 +90,18 @@ router.route('/description/:id?')
 })
 
 //------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------get product availabitlity----------------------------------------------
+
+router.route('/availability/:id?')
+.get(function(req,res,next){
+    printAvailabilityById(req.param("id"),function(prod_id){
+    console.log("product_id: "+prod_id);
+    res.send(prod_id);
+    });
+})
+
+
+//------------------------------------------------------------------------------------------------------------------
 //=========================================post operations==========================================================
 router.route('/addproduct/?')
 .post(function(req, res, next) {
@@ -136,6 +148,13 @@ function printPriceByBarcode(barcode_id,fn){
 
 function printDescrptionById(prod_id,fn){
     Product.find({_id:prod_id},{product_name:1,description:1}).exec(function(err,obj){
+        return fn(obj);
+    })
+}
+
+
+function printAvailabilityById(prod_id,fn){
+    Product.find({_id:prod_id},{availability:1}).exec(function(err,obj){
         return fn(obj);
     })
 }
