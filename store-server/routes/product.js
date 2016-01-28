@@ -79,6 +79,17 @@ router.route('/price-barcode/:barcodeid?')
 })
 
 //------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------get product description by id------------------------------------------
+
+router.route('/description/:id?')
+.get(function(req,res,next){
+    printDescrptionById(req.param("id"),function(prod_id){
+    console.log("product_id: "+prod_id);
+    res.send(prod_id);
+    });
+})
+
+//------------------------------------------------------------------------------------------------------------------
 //=========================================post operations==========================================================
 router.route('/addproduct/?')
 .post(function(req, res, next) {
@@ -104,6 +115,7 @@ function getProductDetails(fn) {
 			return fn(item);
 	})
 }
+
 function printProductByCategory(category,fn){
     Product.find({category:category}).exec(function(err,obj){
         return fn(obj);
@@ -115,8 +127,15 @@ function printPriceById(prod_id,fn){
         return fn(obj);
     })
 }
+
 function printPriceByBarcode(barcode_id,fn){
     Product.find({barcode_id:barcode_id},{price:1}).exec(function(err,obj){
+        return fn(obj);
+    })
+}
+
+function printDescrptionById(prod_id,fn){
+    Product.find({_id:prod_id},{product_name:1,description:1}).exec(function(err,obj){
         return fn(obj);
     })
 }
