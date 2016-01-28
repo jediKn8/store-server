@@ -60,8 +60,25 @@ router.route('/categorylist/:category?')
 })
 
 //------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------get product price based on id/barcode id-----------------------------
 
+router.route('/price/:id?')
+.get(function(req,res,next){
+    printPriceById(req.param("id"),function(prod_id){
+    console.log("product_id: "+prod_id);
+    res.send(prod_id);
+    });
+})
 
+router.route('/price-barcode/:barcodeid?')
+.get(function(req,res,next){
+    printPriceByBarcode(req.param("barcodeid"),function(barcode_id){
+    console.log("barcode_id: "+barcode_id);
+    res.send(barcode_id);
+    });
+})
+
+//------------------------------------------------------------------------------------------------------------------
 //=========================================post operations==========================================================
 router.route('/addproduct/?')
 .post(function(req, res, next) {
@@ -92,9 +109,21 @@ function printProductByCategory(category,fn){
         return fn(obj);
     })
 }
+
+function printPriceById(prod_id,fn){
+    Product.find({_id:prod_id},{price:1}).exec(function(err,obj){
+        return fn(obj);
+    })
+}
+function printPriceByBarcode(barcode_id,fn){
+    Product.find({barcode_id:barcode_id},{price:1}).exec(function(err,obj){
+        return fn(obj);
+    })
+}
+
 // get event by id
 function getProductDetailsById(pID, fn) {
-    Product.findOne({barcode_id: pID})
+    Product.findOne({_id: pID})
 	.exec(function (err, obj) {
 			return fn(obj);
 	})
